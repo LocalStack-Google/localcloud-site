@@ -1,0 +1,131 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-a" x1="120" y1="80" x2="1080" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBFF"/>
+      <stop offset="1" stop-color="#E9F2FF"/>
+    </linearGradient>
+    <linearGradient id="screen-a" x1="265" y1="140" x2="950" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F2747"/>
+      <stop offset="1" stop-color="#14335D"/>
+    </linearGradient>
+    <linearGradient id="card-a" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EAF2FF"/>
+    </linearGradient>
+    <linearGradient id="accent-a" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8AB4F8"/>
+      <stop offset="1" stop-color="#1A73E8"/>
+    </linearGradient>
+    <filter id="shadow-a" x="130" y="70" width="940" height="610" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="32" stdDeviation="28" flood-color="#21416F" flood-opacity="0.2"/>
+    </filter>
+    <filter id="soft-a" x="0" y="0" width="1200" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="760" rx="36" fill="url(#bg-a)"/>
+  <circle cx="205" cy="126" r="92" fill="#DCEBFF" filter="url(#soft-a)" opacity="0.55"/>
+  <circle cx="1030" cy="168" r="110" fill="#D6E7FF" filter="url(#soft-a)" opacity="0.42"/>
+  <ellipse cx="600" cy="660" rx="320" ry="34" fill="#D1E0F6"/>
+
+  <g filter="url(#shadow-a)">
+    <rect x="188" y="96" width="824" height="492" rx="30" fill="#D8E4F7"/>
+    <rect x="210" y="116" width="780" height="448" rx="26" fill="#122746"/>
+    <rect x="238" y="142" width="724" height="394" rx="22" fill="url(#screen-a)"/>
+    <rect x="238" y="142" width="724" height="54" rx="22" fill="#183863"/>
+    <circle cx="276" cy="169" r="6" fill="#F18C7A"/>
+    <circle cx="298" cy="169" r="6" fill="#F5C96A"/>
+    <circle cx="320" cy="169" r="6" fill="#7FD6A5"/>
+    <text x="352" y="176" fill="#D9E7FF" font-size="18" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="600">LocalCloud runtime</text>
+    <rect x="748" y="152" width="184" height="32" rx="16" fill="#2C5A94"/>
+    <circle cx="774" cy="168" r="6" fill="#7FD6A5"/>
+    <text x="790" y="174" fill="#E8F1FF" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="600">major services online</text>
+
+    <rect x="264" y="214" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="288" y="238" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/gcs.svg" x="296" y="246" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="358" y="261" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">Cloud Storage</text>
+    <text x="358" y="286" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">buckets and object IO</text>
+    <rect x="358" y="302" width="104" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="380" cy="317" r="5" fill="#34A853"/>
+    <text x="393" y="322" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">ready</text>
+
+    <rect x="492" y="214" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="516" y="238" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/pubsub.svg" x="524" y="246" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="586" y="261" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">Pub/Sub</text>
+    <text x="586" y="286" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">topics and event fan-out</text>
+    <rect x="586" y="302" width="104" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="608" cy="317" r="5" fill="#34A853"/>
+    <text x="621" y="322" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">ready</text>
+
+    <rect x="720" y="214" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="744" y="238" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/firestore.svg" x="752" y="246" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="814" y="261" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">Firestore</text>
+    <text x="814" y="286" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">documents and live queries</text>
+    <rect x="814" y="302" width="104" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="836" cy="317" r="5" fill="#34A853"/>
+    <text x="849" y="322" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">ready</text>
+
+    <rect x="264" y="360" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="288" y="384" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/bigquery.svg" x="296" y="392" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="358" y="407" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">BigQuery</text>
+    <text x="358" y="432" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">local SQL analytics</text>
+    <rect x="358" y="448" width="122" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="380" cy="463" r="5" fill="#34A853"/>
+    <text x="393" y="468" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">queries ready</text>
+
+    <rect x="492" y="360" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="516" y="384" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/workflows.svg" x="524" y="392" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="586" y="407" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">Workflows</text>
+    <text x="586" y="432" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">multi-step local flows</text>
+    <rect x="586" y="448" width="108" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="608" cy="463" r="5" fill="#34A853"/>
+    <text x="621" y="468" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">flows ready</text>
+
+    <rect x="720" y="360" width="214" height="128" rx="24" fill="url(#card-a)"/>
+    <rect x="744" y="384" width="54" height="54" rx="16" fill="#E0EDFF"/>
+    <image href="../icons/monitoring.svg" x="752" y="392" width="38" height="38" preserveAspectRatio="xMidYMid meet"/>
+    <text x="814" y="407" fill="#17345D" font-size="23" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">Monitoring</text>
+    <text x="814" y="432" fill="#4A678E" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">metrics and health checks</text>
+    <rect x="814" y="448" width="110" height="30" rx="15" fill="#E4F7EA"/>
+    <circle cx="836" cy="463" r="5" fill="#34A853"/>
+    <text x="849" y="468" fill="#2B6F42" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">healthy</text>
+
+    <rect x="264" y="504" width="670" height="20" rx="10" fill="#1F467A"/>
+    <rect x="264" y="504" width="496" height="20" rx="10" fill="url(#accent-a)"/>
+    <text x="264" y="537" fill="#B7CEF5" font-size="15" font-family="IBM Plex Sans, Arial, sans-serif">major services visible inside one local runtime</text>
+  </g>
+
+  <path d="M150 606H1050L1008 644H192L150 606Z" fill="#C9D9EF"/>
+  <path d="M165 596H1035C1041 596 1046 601 1046 607V614C1046 620 1041 625 1035 625H165C159 625 154 620 154 614V607C154 601 159 596 165 596Z" fill="#ECF3FF"/>
+  <rect x="530" y="603" width="140" height="10" rx="5" fill="#D2E0F3"/>
+
+  <g>
+    <rect x="866" y="84" width="214" height="56" rx="20" fill="#FFFFFF" stroke="#D6E4F8"/>
+    <circle cx="900" cy="112" r="14" fill="#E4F7EA"/>
+    <path d="M893 112L899 118L908 106" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="928" y="107" fill="#17345D" font-size="16" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">No code change</text>
+    <text x="928" y="126" fill="#5A7397" font-size="13" font-family="IBM Plex Sans, Arial, sans-serif">same SDK and CLI flow</text>
+  </g>
+
+  <g>
+    <rect x="90" y="540" width="186" height="56" rx="20" fill="#FFFFFF" stroke="#D6E4F8"/>
+    <circle cx="123" cy="568" r="14" fill="#E9F1FF"/>
+    <text x="116" y="573" fill="#1A73E8" font-size="18" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">$</text>
+    <text x="146" y="563" fill="#17345D" font-size="16" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">$0 cost</text>
+    <text x="146" y="582" fill="#5A7397" font-size="13" font-family="IBM Plex Sans, Arial, sans-serif">during local dev</text>
+  </g>
+
+  <g>
+    <rect x="888" y="556" width="212" height="56" rx="20" fill="#FFFFFF" stroke="#D6E4F8"/>
+    <circle cx="921" cy="584" r="14" fill="#E4F7EA"/>
+    <path d="M914 584L920 590L929 578" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="949" y="579" fill="#17345D" font-size="16" font-family="IBM Plex Sans, Arial, sans-serif" font-weight="700">&lt; 1 min boot</text>
+    <text x="949" y="598" fill="#5A7397" font-size="13" font-family="IBM Plex Sans, Arial, sans-serif">local stack ready fast</text>
+  </g>
+</svg>

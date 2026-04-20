@@ -42,78 +42,12 @@ const catalogStats = [
   <Header />
 
   <main id="main-content" class="site-page">
-    <section class="site-section site-section--hero">
-      <div class="container grid gap-8 xl:grid-cols-[1fr,0.9fr]">
-        <div class="reveal">
-          <span class="site-eyebrow">
-            <span class="site-eyebrow__pulse"></span>
-            Service Catalog
-          </span>
-          <h1 class="mt-6 max-w-[12ch]">Major Google Cloud services, organized the way teams use them.</h1>
-          <p class="mt-6 max-w-[44rem] text-lg leading-8 text-[var(--text-2)] sm:text-xl">
-            Browse LocalCloud through storage, databases, analytics, messaging, security, operations, and compute. The goal of this page is
-            fast orientation: what category a service belongs to, whether it is default-on or opt-in, and where to click for supported behavior.
-          </p>
-
-          <div class="mt-8 grid gap-4 sm:grid-cols-3">
-            {catalogStats.map((stat) => (
-              <article class="site-panel site-panel--soft p-5">
-                <div class="text-4xl font-semibold tracking-[-0.08em] text-[var(--text)]">{stat.value}</div>
-                <div class="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--accent-strong)]">{stat.label}</div>
-                <p class="mt-3 text-sm leading-7 text-[var(--text-2)]">{stat.note}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <aside class="site-panel p-5 reveal sm:p-6">
-          <div class="flex items-center justify-between gap-3">
-            <span class="site-kicker">How To Read This Page</span>
-            <a href={`${base}docs/`} class="site-inline-link">Open setup docs</a>
-          </div>
-
-          <div class="mt-4 grid gap-3">
-            <div class="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] p-4">
-              <div class="flex items-center justify-between gap-3">
-                <strong class="text-base text-[var(--text)]">Grouped Like Google Cloud</strong>
-                <span class="site-chip site-chip--accent">Category-first</span>
-              </div>
-              <p class="mt-3 text-sm leading-7 text-[var(--text-2)]">
-                The catalog is organized by product area so teams can scan storage, databases, analytics, integration, security, operations,
-                and compute without needing to know implementation details first.
-              </p>
-            </div>
-
-            <div class="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] p-4">
-              <div class="flex items-center justify-between gap-3">
-                <strong class="text-base text-[var(--text)]">Default-on Vs Opt-in</strong>
-                <span class="site-chip site-chip--success">Runtime status</span>
-              </div>
-              <p class="mt-3 text-sm leading-7 text-[var(--text-2)]">
-                Cards show whether a service is ready in the default boot path or whether it needs opt-in runtime access because it depends on Docker-backed behavior.
-              </p>
-            </div>
-
-            <div class="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] p-4">
-              <div class="flex items-center justify-between gap-3">
-                <strong class="text-base text-[var(--text)]">Detail Pages Hold The Depth</strong>
-                <span class="site-chip site-chip--warn">Per service</span>
-              </div>
-              <p class="mt-3 text-sm leading-7 text-[var(--text-2)]">
-                Open any service page for the exact connection info, supported capabilities, current gaps, and a brief note on how that service is implemented locally.
-              </p>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
     {categoryGroups.map((group) => (
       <section class="site-section site-section--tight">
         <div class="container">
           <div class="site-section-heading reveal">
             <span class="site-kicker">{group.title}</span>
-            <h2>{group.title} services for local development.</h2>
+            <h3>{group.title} services for local development.</h3>
             <p>{group.description}</p>
           </div>
 
@@ -155,6 +89,31 @@ const catalogStats = [
         </div>
       </section>
     ))}
+
+    <section class="site-section site-section--hero">
+      <div class="container grid gap-8 xl:grid-cols-[1fr,0.9fr]">
+        <div class="reveal">
+          <span class="site-eyebrow">
+            <span class="site-eyebrow__pulse"></span>
+            Service Catalog
+          </span>
+          <p class="mt-6 max-w-[44rem] text-lg leading-8 text-[var(--text-2)] sm:text-xl">
+            LocalCloud provides health & usage for each service via in-built console app.
+          </p>
+
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            {catalogStats.map((stat) => (
+                <article class="site-panel site-panel--soft p-5">
+                  <div class="text-4xl font-semibold tracking-[-0.08em] text-[var(--text)]">{stat.value}</div>
+                  <div class="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--accent-strong)]">{stat.label}</div>
+                  <p class="mt-3 text-sm leading-7 text-[var(--text-2)]">{stat.note}</p>
+                </article>
+              ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <Footer />

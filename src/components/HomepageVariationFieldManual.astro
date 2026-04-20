@@ -20,42 +20,14 @@ docker run -d \\
 eval "$(curl -s localhost:8080/_localcloud/env?format=shell)"`;
 
 const heroSignals = [
-  { value: 'Major', label: 'Google Cloud services', note: 'storage, data, events, ops, and runtime' },
-  { value: '1', label: 'Docker container', note: 'one local boot path for the team' },
-  { value: '$0', label: 'cloud spend during iteration', note: 'stay local until the team is ready' },
+  { value: '1', label: 'Docker container', note: 'No cloud account or access required for the team' },
+  { value: '$0', label: 'cloud spend during dev / iteration', note: 'stay local until the team is ready' },
 ];
 
-const heroOrbit = [
-  { slug: 'cloud-storage', left: '10%', top: '10%', delay: '0s' },
-  { slug: 'pubsub', left: '49%', top: '4%', delay: '0.8s' },
-  { slug: 'firestore', left: '79%', top: '12%', delay: '1.5s' },
-  { slug: 'bigquery', left: '84%', top: '46%', delay: '2.1s' },
-  { slug: 'spanner', left: '70%', top: '74%', delay: '1.1s' },
-  { slug: 'cloud-tasks', left: '26%', top: '78%', delay: '2.7s' },
-  { slug: 'secret-manager', left: '6%', top: '52%', delay: '1.8s' },
-  { slug: 'cloud-workflows', left: '52%', top: '86%', delay: '0.4s' },
-].map((entry) => ({
-  ...entry,
-  service: services.find((service) => service.slug === entry.slug)!,
-}));
-
-const storyCards = [
-  {
-    eyebrow: 'Zero code changes',
-    title: 'Keep your existing SDK flow and point it at localhost.',
-    body: 'LocalCloud is at its best when the setup stays boring: boot the container, export the environment variables, and keep using the same Google Cloud client libraries.',
-  },
-  {
-    eyebrow: 'Visible local runtime',
-    title: 'Open the console, inspect service health, and verify the stack before you debug your app.',
-    body: 'The best developer tools remove guessing. LocalCloud gives you the env handoff, health surface, seeded sample data, and a browser console right after boot.',
-  },
-  {
-    eyebrow: 'Fast inner loop',
-    title: 'Keep early development local before you spend time and money in shared cloud projects.',
-    body: 'Storage, databases, messaging, operations, and runtime surfaces are all easy to browse from one place, so teams can move quickly without losing visibility.',
-  },
-];
+const heroIllustration = {
+  src: `${base}illustrations/hero-laptop-service-grid.svg`,
+  alt: 'A laptop showing LocalCloud services running inside the screen, with real Google Cloud service icons, readiness panels, and badges for no code changes and zero cloud cost.',
+};
 
 const atlasColumns = serviceCategoryOrder
   .map((category, index) => ({
@@ -73,16 +45,18 @@ const atlasColumns = serviceCategoryOrder
     <section class="field-hero">
       <div class="field-hero__copy">
         <div class="field-hero__meta">
-          <span class="field-stamp">Most Google Cloud services</span>
+          <span class="field-stamp">Core Google Cloud services</span>
         </div>
 
-        <span class="field-ledger">Single-container local runtime</span>
-
-        <p class="field-overline">No cloud access. No credentials. No cloud costs.</p>
-        <h1>Google Cloud In-a-Box.</h1>
+        <h1 class="field-hero__headline">
+          <span class="field-hero__headline-main">Google Cloud</span>
+          <span class="field-hero__headline-tag">In-a-Box.</span>
+        </h1>
         <p class="field-intro">
-          LocalCloud brings the major Google Cloud services teams reach for first into one Docker container, exports localhost targets for the SDKs,
-          and gives you a console to inspect the runtime before you ever touch a shared project.
+          Run most Google cloud services on your laptop.
+        </p>
+        <p class="field-intro">
+          same SDK and CLI works wihtout any code change.
         </p>
 
         <div class="field-actions">
@@ -103,120 +77,57 @@ const atlasColumns = serviceCategoryOrder
         </ul>
       </div>
 
-      <div class="field-board">
-        <div class="field-board__title">
-          <span class="field-kicker">Local Runtime View</span>
-          <p>A visible local stack for storage, databases, analytics, messaging, operations, and compute-oriented workflows.</p>
-        </div>
-
-        <div class="field-board__surface">
-          <div class="field-board__rings"></div>
-
-          {heroOrbit.map((item) => (
-            <article class="field-orbit" style={`left:${item.left};top:${item.top};animation-delay:${item.delay};`}>
-              <span class="field-orbit__icon">
-                <ServiceIcon iconId={item.service.iconId} name={item.service.name} size={26} />
-              </span>
-            </article>
-          ))}
-
-          <div class="field-board__cube">
-            <div class="field-board__cube-shell">
-              <div class="field-board__cylinders">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <div class="field-board__routes">
-                <i></i>
-                <i></i>
-                <i></i>
-              </div>
-            </div>
-            <div class="field-board__tag">Major services / 1 container</div>
-          </div>
-
-          <div class="field-board__cable"></div>
-
-          <div class="field-board__laptop">
-            <div class="field-board__screen">
-              <div class="field-board__screen-top">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <div class="field-board__status-list">
-                <div><b></b> gateway healthy</div>
-                <div><b></b> env handoff ready</div>
-                <div><b></b> services online</div>
-              </div>
-            </div>
-            <div class="field-board__base"></div>
-          </div>
-
-          <div class="field-board__note field-board__note--left">
-            <span class="field-kicker">Assembly</span>
-            <strong>Single launch path</strong>
-            <p>Pull one image, start one container, export the localhost endpoints, and keep coding.</p>
-          </div>
-
-          <div class="field-board__note field-board__note--right">
-            <span class="field-kicker">Coverage</span>
-            <strong>{atlasColumns.length} product categories in one local runtime</strong>
-            <p>Storage, data, events, operations, and runtime surfaces are grouped the way Google Cloud teams already think about them.</p>
-          </div>
-        </div>
-      </div>
+      <figure class="field-board__figure">
+        <img
+            src={heroIllustration.src}
+            alt={heroIllustration.alt}
+            class="field-board__image"
+        />
+      </figure>
     </section>
 
     <section class="field-quickstart" id="manual-quickstart">
       <article class="field-card field-card--paper">
-        <span class="field-kicker">Quick Start</span>
-        <h2>Boot LocalCloud in less than 1 minute.</h2>
-        <p>
-          Pull the image, start the container, export the generated environment variables, and point your existing Google Cloud SDK clients at localhost.
-        </p>
-
-        <ol class="field-steps">
-          <li><span>01</span> Pull the image and boot the default runtime footprint.</li>
-          <li><span>02</span> Export the generated localhost endpoints for the SDKs.</li>
-          <li><span>03</span> Open the console, verify service health, and make your first API call.</li>
-        </ol>
-      </article>
-
-      <article class="field-card field-card--terminal">
-        <div class="field-terminal__head">
-          <div>
-            <span class="field-kicker">Command Deck</span>
-            <p>One copyable path for the default runtime.</p>
-          </div>
-          <CopyButton text={dockerCmd} class="field-copy" />
+        <div class="field-quickstart__content">
+          <span class="field-kicker">Quick Start</span>
+          <h2>Quick Start LocalCloud in less than 1 minute.</h2>
+          <ol class="field-steps">
+            <li><span>01</span> Pull & Run the docker image.</li>
+            <li><span>02</span> Open the console, check service health.</li>
+            <li><span>03</span> Point your SDK to localhost, Refer to user guide on console for all ENV for service variables, make your first API call.</li>
+          </ol>
         </div>
+        <div class="field-quickstart__terminal">
+          <article class="field-card field-card--terminal">
+            <div class="field-terminal__head">
+              <CopyButton text={dockerCmd} class="field-copy" />
+            </div>
 
-        <pre><code>{dockerCmd}</code></pre>
+            <pre><code>{dockerCmd}</code></pre>
+          </article>
+        </div>
       </article>
     </section>
 
     <section class="field-ribbon">
       <article class="field-ribbon__item">
         <span class="field-kicker">Zero Code Changes</span>
-        <strong>Use the same Google Cloud SDKs and retarget them with one exported env block.</strong>
+        <strong>Use the same Google Cloud SDKs and CLI, redirect them to local with ENV variables.</strong>
       </article>
       <article class="field-ribbon__item">
-        <span class="field-kicker">Operational Handoff</span>
-        <strong>Console, health, env export, and seeded sample data make the runtime inspectable immediately.</strong>
-      </article>
-      <article class="field-ribbon__item">
-        <span class="field-kicker">Inner Loop Speed</span>
+        <span class="field-kicker">Fast Development & Testing</span>
         <strong>Stay local while you shape the app, then switch back to shared Google Cloud environments when you are ready.</strong>
+      </article>
+      <article class="field-ribbon__item">
+        <span class="field-kicker">Operational Visibility </span>
+        <strong>Console, health, env export, and seeded sample data make the runtime inspectable immediately.</strong>
       </article>
     </section>
 
     <section class="field-atlas">
       <div class="field-section-heading">
-        <span class="field-kicker">Service Atlas</span>
-        <h2>Browse LocalCloud by product category, not emulator internals.</h2>
-        <p>Storage, databases, analytics, messaging, security, operations, and compute are grouped the same way platform teams already scan Google Cloud.</p>
+        <span class="field-kicker">Service Catalog</span>
+        <h2>LocalCloud Services:</h2>
       </div>
 
       <div class="field-atlas__grid">
@@ -232,7 +143,7 @@ const atlasColumns = serviceCategoryOrder
                 <div class="field-service">
                   <div class="field-service__main">
                     <span class="field-service__icon">
-                      <ServiceIcon iconId={service.iconId} name={service.name} size={24} />
+                      <ServiceIcon iconId={service.iconId} name={service.name} size={34} />
                     </span>
                     <div>
                       <strong>{service.name}</strong>
@@ -253,20 +164,10 @@ const atlasColumns = serviceCategoryOrder
       </div>
     </section>
 
-    <section class="field-story">
-      {storyCards.map((card) => (
-        <article class="field-story__card">
-          <span class="field-kicker">{card.eyebrow}</span>
-          <h3>{card.title}</h3>
-          <p>{card.body}</p>
-        </article>
-      ))}
-    </section>
-
     <section class="field-cta">
       <div>
         <span class="field-kicker">Continue Exploring</span>
-        <h2>Boot LocalCloud in less than 1 minute, then dig into the docs or the full service atlas.</h2>
+        <h2>Run All Cloud Services locally for faster & cheaper development & testing.</h2>
         <p>
           The homepage tells you what LocalCloud is. The docs and service pages explain how to use it, what each service supports, and where the runtime boundaries are.
         </p>
@@ -346,7 +247,7 @@ const atlasColumns = serviceCategoryOrder
 
   .field-hero {
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
     padding: 1rem 0 1rem;
   }
 
@@ -410,8 +311,31 @@ const atlasColumns = serviceCategoryOrder
 
   .field-hero h1 {
     margin-top: 1rem;
-    max-width: 11ch;
-    font-size: clamp(3.4rem, 8vw, 6.25rem);
+    max-width: none;
+    font-size: clamp(3rem, 6.7vw, 5.65rem);
+  }
+
+  .field-hero__headline {
+    display: grid;
+    width: fit-content;
+    max-width: 100%;
+    gap: 0.08em;
+  }
+
+  .field-hero__headline span {
+    display: block;
+  }
+
+  .field-hero__headline-main {
+    white-space: nowrap;
+  }
+
+  .field-hero__headline-tag {
+    justify-self: end;
+    padding-right: 0.04em;
+    font-size: clamp(2.35rem, 4.7vw, 4.45rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
   }
 
   .field-intro,
@@ -497,6 +421,43 @@ const atlasColumns = serviceCategoryOrder
     border: 1px solid var(--field-line);
     border-radius: 1.75rem;
     background: linear-gradient(180deg, rgba(248, 251, 255, 0.96), rgba(235, 243, 255, 0.94));
+  }
+
+  .field-board__figure {
+    margin: 0;
+    width: min(100%, 39rem);
+    justify-self: end;
+    border: 1px solid rgba(188, 210, 242, 0.8);
+    border-radius: 1.35rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 248, 255, 0.96));
+    box-shadow: 0 24px 50px -34px rgba(48, 73, 122, 0.28);
+  }
+
+  .field-board__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .field-board__summary {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .field-board__summary-card {
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--field-line);
+    border-radius: 1.1rem;
+    background: rgba(251, 253, 255, 0.9);
+  }
+
+  .field-board__summary-card strong {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--field-ink);
+    font-size: 0.98rem;
+    line-height: 1.55;
   }
 
   .field-board__surface {
@@ -786,6 +747,15 @@ const atlasColumns = serviceCategoryOrder
     background: linear-gradient(180deg, rgba(255, 249, 238, 0.95), rgba(245, 236, 221, 0.92));
   }
 
+  .field-quickstart__content,
+  .field-quickstart__terminal {
+    min-width: 0;
+  }
+
+  .field-quickstart__terminal {
+    align-self: start;
+  }
+
   .field-card--terminal {
     background: linear-gradient(180deg, rgba(30, 37, 48, 0.98), rgba(22, 28, 38, 0.98));
     color: #eef4ff;
@@ -920,10 +890,11 @@ const atlasColumns = serviceCategoryOrder
   .field-service__icon {
     display: inline-grid;
     place-items: center;
-    width: 2.65rem;
-    height: 2.65rem;
-    border-radius: 0.85rem;
+    width: 3.35rem;
+    height: 3.35rem;
+    border-radius: 1rem;
     background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(102, 128, 173, 0.12);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
@@ -1029,7 +1000,6 @@ const atlasColumns = serviceCategoryOrder
   }
 
   @media (min-width: 760px) {
-    .field-quickstart,
     .field-ribbon,
     .field-story,
     .field-cta {
@@ -1039,13 +1009,21 @@ const atlasColumns = serviceCategoryOrder
     .field-ribbon {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+
   }
 
   @media (min-width: 980px) {
     .field-hero,
     .field-cta {
-      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      grid-template-columns: minmax(0, 1.04fr) minmax(28rem, 0.9fr);
       align-items: center;
+    }
+
+    .field-card--paper {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
+      gap: 1.5rem;
+      align-items: start;
     }
 
     .field-atlas__grid,
@@ -1136,6 +1114,19 @@ const atlasColumns = serviceCategoryOrder
     .field-quickstart h2,
     .field-cta h2 {
       max-width: none;
+    }
+
+    .field-hero__headline {
+      width: 100%;
+    }
+
+    .field-hero__headline-main {
+      white-space: normal;
+    }
+
+    .field-hero__headline-tag {
+      justify-self: start;
+      padding-right: 0;
     }
 
     .field-board__surface {
