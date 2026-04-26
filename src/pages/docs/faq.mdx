@@ -32,7 +32,7 @@ Any language with GCP SDK support works: Python, Node.js, Go, Java, C#, Ruby, PH
 
 ### How complete is the BigQuery emulation?
 
-~95% of Standard SQL is supported: DQL, DDL, DML, 120+ functions, JOINs, CTEs, window functions, UNNEST, PIVOT, external tables, and the gRPC Storage API. Not yet supported: scripting (IF/LOOP), stored procedures, BQML, and geography functions.
+The BigQuery emulator dependency reports `~96%` SQL coverage, `818` passing tests, `190` audited features, and `175+` mapped functions. It covers common DQL, DDL, DML, scripting, stored procedures, external tables, `11` INFORMATION_SCHEMA views, REST APIs, and simplified gRPC Storage API paths. BQML, AEAD encryption, security policy enforcement, and full geography parity are not complete; geography is partial with `12` working `ST_*` functions.
 
 ### Can I use this in CI/CD?
 

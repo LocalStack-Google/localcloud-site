@@ -1,0 +1,92 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Spanner Emulator Features
+description: How LocalCloud packages the Cloud Spanner emulator, why that choice matters, and what Spanner workflows it covers locally.
+---
+
+# Spanner emulator features
+
+Spanner is semantics-heavy: schemas, SQL, transactions, timestamps, indexes, and client behavior all matter. LocalCloud uses the Cloud Spanner emulator as the foundation because a database-shaped mock would give teams speed but not enough confidence.
+
+The LocalCloud value is packaging that emulator into the same local Google Cloud runtime as the rest of the stack: one container, one environment handoff, one console, one readiness surface, and one place to run multi-service development flows.
+
+## How it is built, and why
+
+The Spanner emulator is built around the same kind of semantics that make Cloud Spanner different from a normal local database. It uses **ZetaSQL** for GoogleSQL behavior, a **C++ core** for the database backend, **gRPC APIs** for client-library compatibility, and a **Go REST gateway** for HTTP access.
+
+That choice matters because Spanner compatibility is not just about accepting SQL strings. It is about schema behavior, DML behavior, transaction rules, generated columns, commit timestamps, indexes, and the way official clients interact with the service.
+
+LocalCloud chooses this path for three reasons:
+
+| Decision | Why it was chosen |
+| --- | --- |
+| Use the Cloud Spanner emulator foundation | It is the closest local semantic target for Spanner clients and schema/query behavior. |
+| Keep the gRPC and REST surfaces | Existing Cloud Spanner SDKs can point at localhost without app-level rewrites. |
+| Wrap it inside LocalCloud | Developers do not need to orchestrate a standalone Spanner emulator beside the rest of their local cloud stack. |
+
+LocalCloud exposes the emulator with known ports, environment variables, health visibility, service metadata, and the same console-driven runtime model as the other services. That makes Spanner feel like part of a local cloud rather than a separate special-case process.
+
+The underlying build is also expensive work. ZetaSQL-heavy builds are large, so the dependency project documents optimization work around Docker layer reuse, faster code-only rebuilds, warm cache behavior, and lower-memory compile settings.
+
+## How it compares
+
+The top available Spanner emulator is the official Cloud Spanner emulator. LocalCloud does not try to replace its correctness work. Instead, it makes that emulator easier to use in real application development.
+
+| Option | Strength | LocalCloud advantage |
+| --- | --- | --- |
+| Official Spanner emulator directly | Correctness-first local Spanner surface from Google. | You still manage it as a separate process, env setup, ports, health checks, and workflow island. |
+| LocalCloud Spanner | Uses the same emulator foundation inside a broader local cloud runtime. | Spanner runs beside Storage, Pub/Sub, BigQuery, Firestore, Workflows, and other services with one boot path and shared visibility. |
+
+That is where LocalCloud shines: not by claiming better Spanner semantics than the official emulator, but by making Spanner part of a complete local development environment.
+
+## Production feature parity
+
+The Spanner emulator covers the core development behaviors teams need before production validation:
+
+| Area | Local emulator coverage |
+| --- | --- |
+| Admin APIs | Instance and database admin APIs, including long-running operation flows. |
+| Schema | DDL schema changes, generated columns, generated primary keys, check constraints, and foreign keys. |
+| Query and mutation | SQL query execution, DML, sequence numbers, and non-SQL read/write APIs. |
+| Transactions | Read/write transaction behavior, stale reads, partitioned read, partitioned query, and partitioned DML APIs. |
+| Indexes and types | Secondary indexes, commit timestamps, `NUMERIC`, `JSON`, and information schema. |
+| Client surfaces | gRPC, REST, Cloud Spanner client libraries, PostgreSQL interface, and PGAdapter. |
+
+There are important limits:
+
+- Data is in memory and is lost when the emulator stops.
+- IAM and Backup APIs are not supported.
+- Only one read-write transaction or schema change can run at a time; competing transactions can be aborted.
+- Query plans and profiling output are not meaningful production execution plans.
+- Quotas and production limits are not enforced.
+- Some `SPANNER_SYS` runtime introspection tables are not available.
+- Server-side monitoring, logging, and audit behavior are not production-equivalent.
+
+That is the correct mental model: LocalCloud Spanner is strong for local correctness and workflow validation, while production Spanner remains the source of truth for scale, durability, IAM, quotas, monitoring, and operational behavior.
+
+## Developer workflow coverage
+
+For local engineering, this covers the workflows teams need most:
+
+- Create instances and databases locally.
+- Apply schema migrations and DDL changes.
+- Validate queries, DML, sessions, and transactions.
+- Exercise Cloud Spanner SDK clients against localhost.
+- Test generated columns, indexes, timestamps, JSON, and NUMERIC behavior.
+- Run app integration tests without a cloud project or credentials.
+- Validate Spanner flows next to Pub/Sub, BigQuery, Storage, and other LocalCloud services.
+
+This is especially useful for applications where Spanner is not isolated. Many real flows write events, read configuration, update transactional state, query analytics, and emit logs in one path. LocalCloud keeps that whole path local.
+
+## Engineering depth
+
+Spanner emulation has a large compile and dependency footprint because ZetaSQL is substantial. The dependency project documents build-throughput work that targets faster development cycles:
+
+| Build path | Documented target |
+| --- | --- |
+| Code-only rebuild | From `30-60 min` to `8-12 min`, about `70-80%` faster. |
+| Warm rebuild with cache | From `30-60 min` to `3-8 min`, about `80-90%` faster. |
+| Cold build | From `30-60 min` to `20-40 min`, about `30%` faster. |
+| Compile tuning | `-O1` compiles `2-4x` faster per file and uses `2-4x` less RAM than `-O3` for emulator development. |
+
+Those are developer-throughput numbers, not production runtime benchmarks. They show the kind of engineering investment required to make a serious emulator practical inside a Docker-based local cloud runtime.

@@ -121,8 +121,8 @@ export const services: Service[] = [
     enabled: true,
     envVar: 'BIGQUERY_EMULATOR_HOST=http://localhost:9050',
     description: 'Warehouse-style SQL analytics for datasets, tables, and local query development.',
-    supported: ['~95% Standard SQL (DQL/DDL/DML)', '120+ functions', 'JOINs, CTEs, window functions', 'UNNEST, PIVOT', 'External tables', 'gRPC Storage API', 'INFORMATION_SCHEMA'],
-    notSupported: ['Scripting (IF/LOOP)', 'Stored procedures', 'BQML', 'Geography functions'],
+    supported: ['~96% SQL coverage across DQL/DDL/DML', '175+ mapped BigQuery functions', 'Full scripting and stored procedures', 'JOINs, CTEs, window functions, UNNEST, PIVOT', 'External tables for Parquet, CSV, JSON', 'REST API and simplified gRPC Storage API', '11 INFORMATION_SCHEMA views'],
+    notSupported: ['BQML', 'AEAD encryption functions', 'Security policy enforcement', 'Full GEOGRAPHY parity (12 ST_* functions supported)'],
     iconId: 'bigquery',
   },
   {
@@ -136,8 +136,8 @@ export const services: Service[] = [
     enabled: true,
     envVar: 'SPANNER_EMULATOR_HOST=localhost:9010',
     description: 'Relational database surface for strongly consistent SQL and transactional workloads.',
-    supported: ['Instance/DB CRUD', 'DDL', 'Sessions', 'ExecuteSql', 'Transactions'],
-    notSupported: ['Partitioned DML', 'Change streams'],
+    supported: ['Instance/DB admin APIs', 'DDL, SQL, and DML', 'Sessions and transactions', 'Secondary indexes and commit timestamps', 'Partitioned read/query/DML APIs', 'NUMERIC, JSON, generated columns', 'PostgreSQL interface and PGAdapter'],
+    notSupported: ['Persistence between emulator restarts', 'IAM and Backup APIs', 'Production performance parity', 'Quota enforcement', 'Some SPANNER_SYS introspection tables'],
     iconId: 'spanner',
   },
   {

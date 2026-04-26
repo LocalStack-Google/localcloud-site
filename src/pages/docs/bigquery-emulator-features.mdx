@@ -1,0 +1,127 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: BigQuery Emulator Features
+description: How LocalCloud's DuckDB-based BigQuery emulator is built, where it shines, and how much production workflow it covers.
+---
+
+# LocalCloud's BigQuery emulator
+
+LocalCloud includes a purpose-built & custom-stack BigQuery emulator because Google does not provide an official BigQuery emulator.
+
+{/* Google's official BigQuery development path is still the hosted service itself, usually through the BigQuery sandbox or a regular BigQuery project. That is different from services like Spanner, Firestore, Pub/Sub, or Bigtable, where Google documents local emulator workflows directly in the Cloud SDK. */}
+
+
+## What's Included?
+
+| Question | BigQuery Emulator by Goccy | BigQuery Emulator by LocalCloud |
+| --- | --- | --- |
+| Fully local and offline? | No | Yes |
+| Requires a cloud project? | Yes | No |
+| Free path supports broad BigQuery development? | Limited. The sandbox excludes some workflows teams need for integration testing. | Better for local query, schema, and workflow iteration. |
+| Persistent test state on your laptop or in CI? | Not as a local runtime concept. | Yes, through the LocalCloud runtime. |
+| Built-in local SQL browser and runtime console? | No local runtime. | Yes. |
+| Best for final semantic verification? | Yes, because it is the real service. | No. Production BigQuery remains the source of truth. |
+| Best for fast inner-loop development? | Usually no. | Yes. |
+
+## How it is built, and why
+
+BigQuery is an analytical database problem before it is an API problem. A useful emulator needs more than mock responses: it needs a real SQL engine, nested data support, metadata, DDL, DML, scripting behavior, and client-compatible endpoints.
+
+LocalCloud uses **DuckDB** as the execution engine because it is embedded, fast for OLAP-style work, native on Apple Silicon, Docker-friendly, memory-controllable, and strong with local data formats like Parquet, CSV, and JSON. That makes it a much better substrate for warehouse-style development than a simple in-memory mock or row-store shim.
+
+LocalCloud uses **SQLGlot** because BigQuery speaks GoogleSQL, while DuckDB has its own dialect. SQLGlot gives the emulator a maintainable translation layer for query syntax, function mapping, and dialect-specific rewrites without hard-coding every SQL shape by hand.
+
+The emulator then adds the BigQuery-facing surface around that engine:
+
+| Layer | Why it exists |
+| --- | --- |
+| REST API on port `9050` | Lets existing BigQuery SDK and API clients point at localhost. |
+| gRPC Storage API on port `9060` | Covers common Storage API read/write paths used by data clients. |
+| Function compatibility | Maps `175+` BigQuery functions, including custom behavior where DuckDB differs. |
+| Scripting runtime | Supports procedural SQL flows such as variables, loops, dynamic SQL, and procedures. |
+| Metadata model | Provides DDL metadata, table options, routines, jobs, and `INFORMATION_SCHEMA` views. |
+| External table support | Lets local tests query Parquet, CSV, JSON, local files, GCS-style paths, and HTTP sources. |
+
+That stack is the key design decision: use a serious local analytical engine, translate GoogleSQL into something executable, then expose enough BigQuery API shape that application code can keep using standard clients.
+
+The older options all leave a gap. Developing directly against production BigQuery is accurate but remote, credentialed, and harder to make deterministic. The sandbox is useful for experiments, but it is not the same thing as a local emulator and it excludes some workflows, including streaming data, DML statements, and BigQuery Data Transfer Service. Hand-written mocks are fast, but they usually fail exactly where SQL-heavy applications need confidence: query shape, metadata, schema evolution, and client behavior.
+
+## How it compares
+
+There are two practical alternatives developers usually reach for:
+
+| Option | Strength | LocalCloud advantage |
+| --- | --- | --- |
+| Production BigQuery or BigQuery sandbox | The real service and final semantic authority. | LocalCloud is fully local, credential-free for development, deterministic in CI, and does not spend cloud budget during iteration. |
+| `goccy/bigquery-emulator` | Strong Go-native emulator with broad parser work and useful API coverage. | LocalCloud uses DuckDB's columnar OLAP engine, runs natively on ARM64, supports local external tables, full scripting/procedures, richer documented metadata, and memory-bounded execution. |
+
+The biggest win is the execution model. DuckDB is built for analytical scans, joins, aggregation, windows, and columnar data. That makes LocalCloud a stronger fit for realistic local analytics work than an emulator that routes BigQuery-like SQL through a row-store layer.
+
+LocalCloud also avoids a major platform tax on Apple Silicon: it runs natively instead of leaning on QEMU for x86-only paths.
+
+The more accurate framing is not "Google emulator vs LocalCloud emulator." Google does not currently provide a local BigQuery emulator. The real comparison is hosted BigQuery development versus a local DuckDB-based development path that gets teams through most of the inner loop before final cloud verification.
+
+## Production feature parity
+
+The BigQuery emulator dependency reports broad coverage across the areas teams use most during development:
+
+| Area | Reported coverage |
+| --- | --- |
+| Overall SQL coverage | `~96%` |
+| Audited features | `190` features covered |
+| Test suite | `818` passing tests across `24` test files |
+| Built-in functions | `175+` mapped functions |
+| DQL | `95%` |
+| DDL | `92%` |
+| DML | `95%` |
+| Scripting | `93%` |
+| REST API | `90%` common usage |
+| gRPC Storage API | `75%` simplified coverage |
+| `INFORMATION_SCHEMA` | `95%`, including `11` views |
+| External tables | `90%` |
+
+What this means in practice:
+
+- Datasets, tables, views, routines, jobs, partitions, options, and storage metadata can be exercised locally.
+- Common query shapes work: joins, CTEs, recursive CTEs, windows, `QUALIFY`, `PIVOT`, `UNPIVOT`, `MERGE`, wildcard tables, arrays, structs, JSON, and named parameters.
+- Procedural workflows work: `DECLARE`, `SET`, `IF`, loops, `FOR...IN`, `REPEAT...UNTIL`, `EXECUTE IMMEDIATE`, stored procedures, and exception handling.
+- Analytical features go beyond simple SQL translation: HLL sketches, `BIGNUMERIC` decimal handling, `FARM_FINGERPRINT`, `NET.*`, formatting helpers, modern JSON helpers, and partial geography support.
+
+There are still production-only or partial areas:
+
+- BQML is not implemented and should fail clearly rather than pretend to train models.
+- AEAD encryption functions are not a development target today.
+- Security policies can be parsed but are not enforced like production IAM.
+- Geography is partial: `12` `ST_*` functions work, but full BigQuery geography parity is not complete.
+- Production BigQuery remains the final authority for exact edge semantics, managed-service behavior, slot scheduling, IAM, and quota behavior.
+
+That gives the right mental model: LocalCloud is closer to production BigQuery for local query development than a sandbox-only or mock-only workflow, but it is still an emulator. Use it to move quickly, then use production BigQuery for final semantic verification.
+
+## Developer workflow coverage
+
+For day-to-day engineering, the emulator covers the activities that usually block local development:
+
+- Write and debug BigQuery SQL locally.
+- Create datasets, tables, views, materialized views, routines, and procedures.
+- Run migrations and DDL-heavy setup in repeatable tests.
+- Load fixture data from local files and external table sources.
+- Run SDK-backed integration tests without cloud credentials.
+- Exercise REST and Storage API client paths from application code.
+- Keep BigQuery in the same LocalCloud runtime as Pub/Sub, Storage, Spanner, Firestore, Workflows, and other services.
+
+That is the practical value: most work can happen in the cheap, fast, local loop, then production BigQuery can be reserved for final compatibility verification.
+
+The recommended workflow is both:
+
+1. Develop, seed, query, and integration-test locally in LocalCloud.
+2. Run final compatibility checks against production BigQuery before release.
+
+That keeps the fast path fast without pretending local emulation is cloud truth.
+
+## Engineering depth
+
+The hard part is not starting DuckDB. The hard part is making a local engine feel enough like BigQuery that real application code and real SQL workflows are useful.
+
+LocalCloud's BigQuery emulator layers together a feature audit, dialect translation, custom function mapping, BigQuery-specific scripting behavior, DDL metadata, `INFORMATION_SCHEMA`, job tracking, external table handling, HLL support, decimal UDFs, partial spatial support, REST endpoints, and gRPC Storage API behavior.
+
+That is why the emulator is positioned as a local development engine rather than a mock. It is built to make the real developer loop faster while staying honest about where production BigQuery is still required.
