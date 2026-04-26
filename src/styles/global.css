@@ -979,6 +979,37 @@ img {
   color: var(--accent-strong);
 }
 
+.support-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6.9rem;
+  padding: 0.22rem 0.52rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.support-badge--supported {
+  background: rgba(24, 128, 56, 0.11);
+  color: var(--brand-green);
+}
+
+.support-badge--partial {
+  background: rgba(251, 188, 4, 0.2);
+  color: #7a5a00;
+}
+
+.support-badge--unsupported {
+  background: rgba(234, 67, 53, 0.11);
+  color: var(--brand-red);
+}
+
 .docs-article pre {
   position: relative;
   margin: 0.9rem 0;
