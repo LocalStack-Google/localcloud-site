@@ -143,7 +143,7 @@ const atlasColumns = serviceCategoryOrder
 
             <div class="field-column__list">
               {column.items.map((service) => (
-                <div class="field-service">
+                <a href={`${base}services/${service.slug}/`} class="field-service">
                   <div class="field-service__main">
                     <span class="field-service__icon">
                       <ServiceIcon iconId={service.iconId} name={service.name} size={34} />
@@ -159,7 +159,7 @@ const atlasColumns = serviceCategoryOrder
                     <span>{service.protocol}</span>
                     <span>:{service.port}</span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </article>
@@ -876,11 +876,23 @@ const atlasColumns = serviceCategoryOrder
     margin-top: 1rem;
   }
 
+  a.field-service {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
   .field-service {
     padding: 0.95rem;
     border: 1px solid rgba(102, 128, 173, 0.14);
     border-radius: 1.15rem;
     background: rgba(255, 255, 255, 0.62);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .field-service:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 4px 16px -8px rgba(45, 108, 223, 0.18);
   }
 
   .field-service__main {

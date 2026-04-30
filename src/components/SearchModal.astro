@@ -3,7 +3,7 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
-<div id="search-modal" class="search-modal" role="dialog" aria-modal="true" aria-label="Search documentation" hidden>
+<div id="search-modal" class="search-modal" role="dialog" aria-modal="true" aria-label="Search documentation" data-base={base} hidden>
   <div class="search-modal__backdrop"></div>
   <div class="search-modal__container">
     <div class="search-modal__header">
@@ -44,7 +44,8 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
   async function loadPagefind() {
     if (pagefind) return pagefind;
     try {
-      pagefind = await import('/pagefind/pagefind.js');
+      var pfBase = modal?.dataset?.base || '/';
+      pagefind = await import(pfBase + 'pagefind/pagefind.js');
       await pagefind.init();
       return pagefind;
     } catch (e) {
