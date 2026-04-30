@@ -56,13 +56,13 @@ docker pull jaysen2apache/localcloud
   <Step title="Start LocalCloud">
 
 ```bash
-docker volume create localcloud-data
+mkdir -p ~/.localcloud/data
 
 docker run -d \
   -p 8080:8080 -p 4443:4443 -p 8085-8087:8085-8087 \
   -p 9010:9010 -p 9050:9050 -p 6379:6379 \
   -m 4g --name localcloud \
-  -v localcloud-data:/var/lib/localcloud \
+  -v ~/.localcloud/data:/var/lib/localcloud \
   jaysen2apache/localcloud
 ```
 

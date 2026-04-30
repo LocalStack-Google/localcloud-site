@@ -20,8 +20,11 @@ curl -X POST http://localhost:8080/_localcloud/seed \
 You can also mount a seed file at startup:
 
 ```bash
+mkdir -p ~/.localcloud/data
+
 docker run -d \
   -v ./seed.yaml:/etc/localcloud/seed.yaml \
+  -v ~/.localcloud/data:/var/lib/localcloud \
   -p 8080:8080 -p 4443:4443 \
   -p 8085-8087:8085-8087 \
   -p 9010:9010 -p 9050:9050 -p 6379:6379 \

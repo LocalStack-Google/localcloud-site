@@ -9,7 +9,7 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 
 const enabledServices = services.filter((service) => service.enabled);
 const emulatorServices = enabledServices.filter((service) => service.type === 'external');
-const dockerCmd = 'docker pull jaysen2apache/localcloud && docker run -d -p 8080:8080 -p 4443:4443 -p 8085-8087:8085-8087 -p 9010:9010 -p 9050:9050 -p 6379:6379 -m 4g --name localcloud jaysen2apache/localcloud';
+const dockerCmd = 'docker pull jaysen2apache/localcloud && mkdir -p ~/.localcloud/data && docker run -d -p 8080:8080 -p 4443:4443 -p 8085-8087:8085-8087 -p 9010:9010 -p 9050:9050 -p 6379:6379 -m 4g --name localcloud -v ~/.localcloud/data:/var/lib/localcloud jaysen2apache/localcloud';
 
 const proofSignals = [
   {
@@ -122,11 +122,14 @@ const workflowPanels = [
         </div>
         <pre class="mt-3 border-0 bg-transparent"><code>docker pull jaysen2apache/localcloud
 
+mkdir -p ~/.localcloud/data
+
 docker run -d \
   -p 8080:8080 -p 4443:4443 \
   -p 8085-8087:8085-8087 \
   -p 9010:9010 -p 9050:9050 -p 6379:6379 \
   -m 4g --name localcloud \
+  -v ~/.localcloud/data:/var/lib/localcloud \
   jaysen2apache/localcloud
 
 eval "$(curl -s localhost:8080/_localcloud/env?format=shell)"</code></pre>
