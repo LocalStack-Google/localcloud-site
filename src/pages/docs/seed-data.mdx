@@ -27,7 +27,9 @@ docker run -d \
   -v ~/.localcloud/data:/var/lib/localcloud \
   -p 8080:8080 -p 4443:4443 \
   -p 8085-8087:8085-8087 \
-  -p 9010:9010 -p 9050:9050 -p 6379:6379 \
+  -p 9010:9010 -p 9020:9020 \
+  -p 9050:9050 -p 9060:9060 \
+  -p 6379:6379 \
   -m 4g --name localcloud \
   jaysen2apache/localcloud
 ```

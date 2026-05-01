@@ -54,7 +54,7 @@ The Spanner emulator covers the core development behaviors teams need before pro
 
 There are important limits:
 
-- Data is in memory and is lost when the emulator stops.
+- Data is persisted to disk via `--data_dir` when a volume is mounted. Without a mounted volume, data is lost when the container stops.
 - IAM and Backup APIs are not supported.
 - Only one read-write transaction or schema change can run at a time; competing transactions can be aborted.
 - Query plans and profiling output are not meaningful production execution plans.

@@ -41,6 +41,13 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
   var pagefind = null;
   var debounceTimer = null;
 
+  function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
   async function loadPagefind() {
     if (pagefind) return pagefind;
     try {
@@ -120,7 +127,7 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
       var search = await pf.search(query);
       if (!search.results.length) {
-        results.innerHTML = '<div class="search-modal__empty"><p>No results for "<strong>' + query.replace(/</g, '&lt;') + '</strong>"</p></div>';
+        results.innerHTML = '<div class="search-modal__empty"><p>No results for "<strong>' + escapeHtml(query) + '</strong>"</p></div>';
         return;
       }
 
@@ -128,9 +135,9 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
       var items = search.results.slice(0, 8);
       for (var i = 0; i < items.length; i++) {
         var data = await items[i].data();
-        html += '<li><a href="' + data.url + '" class="search-modal__result">';
-        html += '<span class="search-modal__result-title">' + (data.meta?.title || data.url) + '</span>';
-        html += '<span class="search-modal__result-excerpt">' + (data.excerpt || '') + '</span>';
+        html += '<li><a href="' + escapeHtml(data.url) + '" class="search-modal__result">';
+        html += '<span class="search-modal__result-title">' + escapeHtml(data.meta?.title || data.url) + '</span>';
+        html += '<span class="search-modal__result-excerpt">' + escapeHtml(data.excerpt || '') + '</span>';
         html += '</a></li>';
       }
       html += '</ul>';
