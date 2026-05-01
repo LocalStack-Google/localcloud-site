@@ -23,12 +23,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
+          node-version: 22
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Clean npm cache
+        run: npm cache clean --force
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
+        env:
+          npm_config_loglevel: verbose
       - name: Build site
         run: npm run build
       - name: Upload GitHub Pages artifact
