@@ -69,6 +69,16 @@ Use the generated export block to set these automatically:
 eval "$(curl -s http://localhost:8080/_localcloud/env?format=shell)"
 ```
 
+### Terraform Variables
+
+For Terraform, use the `terraform` format to export `GOOGLE_*_CUSTOM_ENDPOINT` variables:
+
+```bash
+eval $(curl -s 'http://localhost:8080/_localcloud/env?format=terraform')
+```
+
+This sets endpoints like `GOOGLE_STORAGE_CUSTOM_ENDPOINT`, `GOOGLE_PUBSUB_CUSTOM_ENDPOINT`, etc. and bypasses authentication with `GOOGLE_APPLICATION_CREDENTIALS=/dev/null`. See the [Terraform Integration](/docs/terraform/) guide for details.
+
 ## Docker Compose
 
 ```yaml

@@ -27,6 +27,9 @@ No cloud access. No credentials. No cloud costs.
   <Card title="Configuration" icon="settings" href="/docs/configuration/">
     Environment variables, ports, and settings.
   </Card>
+  <Card title="Terraform" icon="settings" href="/docs/terraform/">
+    Use your existing .tf files with LocalCloud.
+  </Card>
   <Card title="Architecture" icon="layers" href="/docs/architecture/">
     How LocalCloud emulates GCP services internally.
   </Card>
@@ -88,6 +91,15 @@ eval "$(curl -s http://localhost:8080/_localcloud/env?format=shell)"
 
 This sets variables for all provided services like `STORAGE_EMULATOR_HOST`, `PUBSUB_EMULATOR_HOST`, etc.
 To set up only a specific service, refer to the user guide on the console.
+
+**Using Terraform?** Point the Google provider at LocalCloud instead:
+
+```bash
+eval $(curl -s 'http://localhost:8080/_localcloud/env?format=terraform')
+terraform init && terraform apply
+```
+
+See the [Terraform Integration](/docs/terraform/) guide for details.
 
   </Step>
 </Steps>
@@ -198,5 +210,8 @@ Or visit the web console at [http://localhost:8080](http://localhost:8080).
   </Card>
   <Card title="BigQuery Features" icon="book" href="/docs/bigquery-emulator-features/">
     See how the DuckDB-based BigQuery emulator works.
+  </Card>
+  <Card title="Terraform" icon="settings" href="/docs/terraform/">
+    Provision resources locally with your existing .tf files.
   </Card>
 </CardGroup>

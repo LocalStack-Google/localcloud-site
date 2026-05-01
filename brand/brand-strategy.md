@@ -39,7 +39,7 @@ LocalCloud competes in the **local cloud emulation** category. Developers compar
 
 - Uses Google's official emulators where they exist (Pub/Sub, Firestore, Bigtable), extends them where they fall short (Spanner persistence), and fills the gaps where Google ships nothing (Secret Manager, Cloud Tasks, Logging, Monitoring, Memorystore, Workflows)
 - Same SDK codepaths — no application forks, no mock libraries
-- Open source (Apache-2.0) — auditable, extensible, no vendor lock-in
+- Free to use — no vendor lock-in
 - Web console for visual inspection of emulator state
 
 ### Positioning Statement

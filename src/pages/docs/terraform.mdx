@@ -1,0 +1,264 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Terraform Integration
+description: Use your existing Terraform configurations with LocalCloud — no .tf file changes needed.
+---
+
+import Callout from '../../components/Callout.astro';
+import CodeTabs from '../../components/CodeTabs.astro';
+
+# Terraform Integration
+
+LocalCloud works with the standard `hashicorp/google` Terraform provider. Your existing `.tf` files run against LocalCloud without modification — just set environment variables to redirect the provider to localhost.
+
+<Callout type="tip" title="Zero .tf changes">
+The same Terraform code works against real GCP (without env vars) or LocalCloud (with env vars). No wrapper CLI or custom provider needed.
+</Callout>
+
+## Quick Start
+
+```bash
+# 1. Start LocalCloud
+docker run -d \
+  -p 8080:8080 -p 4443:4443 \
+  -p 8085-8087:8085-8087 \
+  -p 9010:9010 -p 9020:9020 \
+  -p 9050:9050 -p 9060:9060 \
+  -p 6379:6379 \
+  -m 4g --name localcloud \
+  jaysen2apache/localcloud
+
+# 2. Point Terraform at LocalCloud
+eval $(curl -s 'http://localhost:8080/_localcloud/env?format=terraform')
+
+# 3. Run Terraform normally
+terraform init
+terraform plan
+terraform apply
+```
+
+The `/_localcloud/env?format=terraform` endpoint exports `GOOGLE_*_CUSTOM_ENDPOINT` variables for all enabled services, plus `GOOGLE_APPLICATION_CREDENTIALS=/dev/null` to bypass authentication.
+
+## Provider Configuration
+
+No changes to your provider block. The standard configuration works:
+
+```hcl
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = "local-project"
+  region  = "us-central1"
+}
+```
+
+## Environment Variables
+
+When you run `eval $(curl -s 'http://localhost:8080/_localcloud/env?format=terraform')`, the following variables are set:
+
+| Variable | Value | Service |
+|----------|-------|---------|
+| `GOOGLE_STORAGE_CUSTOM_ENDPOINT` | `http://localhost:4443` | Cloud Storage |
+| `GOOGLE_PUBSUB_CUSTOM_ENDPOINT` | `http://localhost:8085` | Pub/Sub |
+| `GOOGLE_BIGQUERY_CUSTOM_ENDPOINT` | `http://localhost:9050` | BigQuery |
+| `GOOGLE_SPANNER_CUSTOM_ENDPOINT` | `http://localhost:9020` | Spanner (REST) |
+| `GOOGLE_FIRESTORE_CUSTOM_ENDPOINT` | `http://localhost:8086` | Firestore |
+| `GOOGLE_BIGTABLE_CUSTOM_ENDPOINT` | `http://localhost:8087` | Bigtable |
+| `GOOGLE_SECRET_MANAGER_CUSTOM_ENDPOINT` | `http://localhost:8080` | Secret Manager |
+| `GOOGLE_CLOUD_TASKS_CUSTOM_ENDPOINT` | `http://localhost:8080` | Cloud Tasks |
+| `GOOGLE_COMPUTE_CUSTOM_ENDPOINT` | `http://localhost:8080` | Compute Engine |
+| `GOOGLE_CLOUD_RUN_CUSTOM_ENDPOINT` | `http://localhost:8080` | Cloud Run |
+| `GOOGLE_CONTAINER_CUSTOM_ENDPOINT` | `http://localhost:8080` | GKE |
+| `GOOGLE_LOGGING_CUSTOM_ENDPOINT` | `http://localhost:8080` | Cloud Logging |
+| `GOOGLE_MONITORING_CUSTOM_ENDPOINT` | `http://localhost:8080` | Cloud Monitoring |
+| `GOOGLE_APPLICATION_CREDENTIALS` | `/dev/null` | Auth bypass |
+| `GOOGLE_PROJECT` | `local-project` | All services |
+
+## Example Configuration
+
+```hcl
+# Cloud Storage
+resource "google_storage_bucket" "data" {
+  name          = "my-data-bucket"
+  location      = "us-central1"
+  force_destroy = true
+}
+
+# Pub/Sub
+resource "google_pubsub_topic" "events" {
+  name = "user-events"
+}
+
+resource "google_pubsub_subscription" "processor" {
+  name  = "event-processor"
+  topic = google_pubsub_topic.events.id
+  ack_deadline_seconds = 20
+}
+
+# BigQuery
+resource "google_bigquery_dataset" "analytics" {
+  dataset_id = "analytics"
+  location   = "us-central1"
+}
+
+resource "google_bigquery_table" "events" {
+  dataset_id = google_bigquery_dataset.analytics.dataset_id
+  table_id   = "events"
+
+  schema = jsonencode([
+    { name = "event_id", type = "STRING", mode = "REQUIRED" },
+    { name = "event_type", type = "STRING", mode = "NULLABLE" },
+    { name = "created_at", type = "TIMESTAMP", mode = "NULLABLE" },
+  ])
+}
+
+# Spanner
+resource "google_spanner_instance" "main" {
+  name         = "local-instance"
+  config       = "emulator-config"
+  display_name = "Local Instance"
+  num_nodes    = 1
+}
+
+resource "google_spanner_database" "db" {
+  instance = google_spanner_instance.main.name
+  name     = "my-database"
+}
+
+# Secret Manager
+resource "google_secret_manager_secret" "api_key" {
+  secret_id = "api-key"
+
+  replication {
+    auto {}
+  }
+}
+```
+
+## Resource Compatibility
+
+### Fully Supported
+
+| Resource | Backend |
+|----------|---------|
+| `google_storage_bucket` | GCS (fake-gcs-server) |
+| `google_storage_bucket_object` | Upload/download objects |
+| `google_pubsub_topic` | Pub/Sub emulator |
+| `google_pubsub_subscription` | With ack_deadline, message_retention |
+| `google_bigquery_dataset` | DuckDB-based emulator |
+| `google_bigquery_table` | Schema definition, create, delete |
+| `google_spanner_instance` | Spanner emulator |
+| `google_spanner_database` | DDL, create, delete |
+
+### Partially Supported
+
+| Resource | Notes |
+|----------|-------|
+| `google_secret_manager_secret` | gRPC works; REST transcoding in progress |
+| `google_secret_manager_secret_version` | Same |
+| `google_cloud_tasks_queue` | Same |
+
+### Not Supported
+
+| Resource | Reason |
+|----------|--------|
+| `google_project` | Projects managed via `/_localcloud/projects` API |
+| `google_project_iam_*` | IAM is permissive by default |
+| `google_service_account` | Not emulated |
+| `google_dns_*` | DNS not emulated |
+| `google_sql_*` | Cloud SQL not emulated |
+| `google_vpc_*` / `google_compute_network` | Networking not emulated |
+
+## Authentication
+
+LocalCloud runs in permissive IAM mode by default — no credentials required. Setting `GOOGLE_APPLICATION_CREDENTIALS=/dev/null` tells the Google provider to skip real GCP authentication. All requests are accepted without token validation.
+
+## CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+name: Terraform Integration Test
+
+on:
+  pull_request:
+    paths: ['*.tf', 'terraform/**']
+
+jobs:
+  terraform-test:
+    runs-on: ubuntu-latest
+    services:
+      localcloud:
+        image: jaysen2apache/localcloud
+        ports:
+          - 8080:8080
+          - 4443:4443
+          - 8085-8087:8085-8087
+          - 9010:9010
+          - 9020:9020
+          - 9050:9050
+          - 9060:9060
+          - 6379:6379
+        options: >-
+          --memory 4g
+          --health-cmd "curl -f http://localhost:8080/_localcloud/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9"
+
+      - name: Wait for LocalCloud
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/_localcloud/health > /dev/null; then
+              echo "LocalCloud is ready"
+              break
+            fi
+            sleep 2
+          done
+
+      - name: Configure Terraform for LocalCloud
+        run: eval $(curl -s http://localhost:8080/_localcloud/env?format=terraform) >> $GITHUB_ENV
+
+      - name: Terraform Init & Apply
+        run: |
+          terraform init
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy
+        if: always()
+        run: terraform destroy -auto-approve
+```
+
+## Moving to Production
+
+To switch from LocalCloud to real GCP, unset the environment variables:
+
+```bash
+unset GOOGLE_STORAGE_CUSTOM_ENDPOINT
+unset GOOGLE_PUBSUB_CUSTOM_ENDPOINT
+unset GOOGLE_BIGQUERY_CUSTOM_ENDPOINT
+unset GOOGLE_SPANNER_CUSTOM_ENDPOINT
+# ... unset all GOOGLE_*_CUSTOM_ENDPOINT vars
+
+# Set real credentials
+export GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
+export GOOGLE_PROJECT=my-real-project
+
+terraform plan   # now targets real GCP
+```
+
+Your `.tf` files require zero changes.
