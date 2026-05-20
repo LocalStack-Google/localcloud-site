@@ -78,15 +78,3 @@ For local engineering, this covers the workflows teams need most:
 
 This is especially useful for applications where Spanner is not isolated. Many real flows write events, read configuration, update transactional state, query analytics, and emit logs in one path. LocalCloud keeps that whole path local.
 
-## Engineering depth
-
-Spanner emulation has a large compile and dependency footprint because ZetaSQL is substantial. The dependency project documents build-throughput work that targets faster development cycles:
-
-| Build path | Documented target |
-| --- | --- |
-| Code-only rebuild | From `30-60 min` to `8-12 min`, about `70-80%` faster. |
-| Warm rebuild with cache | From `30-60 min` to `3-8 min`, about `80-90%` faster. |
-| Cold build | From `30-60 min` to `20-40 min`, about `30%` faster. |
-| Compile tuning | `-O1` compiles `2-4x` faster per file and uses `2-4x` less RAM than `-O3` for emulator development. |
-
-Those are developer-throughput numbers, not production runtime benchmarks. They show the kind of engineering investment required to make a serious emulator practical inside a Docker-based local cloud runtime.
