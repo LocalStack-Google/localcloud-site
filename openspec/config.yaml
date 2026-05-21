@@ -1,20 +1,19 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
-
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+context: |
+  Tech stack: Astro 6 + TailwindCSS v4 (Vite plugin)
+  Package manager: pnpm
+  Build command: pnpm build
+  Dev command: pnpm dev
+  Lint command: pnpm lint
+  Type check: pnpm typecheck
+  Domain: Marketing/dashboard site for LocalCloud — a local-first Google Cloud emulator platform
+  Deployment: GitHub Pages via LocalStack-Google/localstack-google.github.io repo
+  Docker image: jaysen2apache/localcloud
+  No Pro/Community tier badges on services — all services run trial then license-gated
+  New services show as "Planned — coming soon"
+  Docs use DocsLayout.astro with sidebar defined inline
+  Icons are simple SVG Google Cloud-style glyphs at 24x24 in public/icons/
+  PostHog analytics configured in BaseLayout.astro
+  Site pages: homepage, services overview, individual service pages, docs/*, changelog
+  Footer license: Proprietary — free for personal/evaluation use

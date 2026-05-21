@@ -15,7 +15,8 @@ mkdir -p ~/.localcloud/data
 docker run -d \\
   -p 8080:8080 -p 4443:4443 \\
   -p 8085-8087:8085-8087 \\
-  -p 9010:9010 -p 9050:9050 -p 6379:6379 \\
+  -p 9010:9010 -p 9020:9020 \\
+  -p 9050:9050 -p 9060:9060 -p 6379:6379 \\
   -m 4g --name localcloud \\
   -v ~/.localcloud/data:/var/lib/localcloud \\
   jaysen2apache/localcloud
@@ -90,9 +91,14 @@ const atlasColumns = serviceCategoryOrder
     </section>
 
     <section class="field-quickstart" id="manual-quickstart">
-      <article class="field-card field-card--paper">
+          <article class="field-card field-card--paper">
         <div class="field-quickstart__content">
           <span class="field-kicker">Quick Start</span>
+
+          <div class="field-callout">
+            <strong>Trial & License</strong>
+            <p>LocalCloud runs in <strong>trial mode</strong> with all services available. After the trial, a license is required to continue. Free for personal and evaluation use.</p>
+          </div>
           <h2>Quick Start LocalCloud in less than 1 minute.</h2>
           <ol class="field-steps">
             <li><span>01</span> Pull & Run the docker image.</li>
@@ -108,6 +114,9 @@ const atlasColumns = serviceCategoryOrder
 
             <pre><code>{dockerCmd}</code></pre>
           </article>
+          <p class="field-docker-note">
+            <strong>Docker socket required for opt-in services</strong> — Services like Cloud Run and GKE start real containers via Docker. Mount <code>/var/run/docker.sock</code> when using those services.
+          </p>
         </div>
       </article>
     </section>
@@ -776,6 +785,56 @@ const atlasColumns = serviceCategoryOrder
     color: rgba(214, 228, 247, 0.7);
     font-size: 0.92rem;
     line-height: 1.55;
+  }
+
+  .field-callout {
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--field-accent);
+    border-radius: 0.5rem;
+    background: rgba(45, 108, 223, 0.06);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .field-callout strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--field-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .field-callout p {
+    margin: 0;
+    color: var(--field-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .field-docker-note {
+    margin: 0.75rem 0 0;
+    padding: 0.7rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(20, 125, 114, 0.07);
+    color: var(--field-muted);
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+
+  .field-docker-note strong {
+    color: var(--field-moss);
+    font-weight: 600;
+  }
+
+  .field-docker-note code {
+    padding: 0.12rem 0.35rem;
+    border-radius: 0.25rem;
+    background: rgba(20, 125, 114, 0.1);
+    color: var(--field-moss);
+    font-size: 0.82rem;
   }
 
   .field-steps {

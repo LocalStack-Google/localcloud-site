@@ -270,9 +270,9 @@ For reference, these BigQuery features transpile and execute correctly:
                         ┌─────────────────────────────────────┐
                   High  │  PARTITIONING    INFORMATION_SCHEMA │
                         │  SCRIPTING       _TABLE_SUFFIX      │
-           Frequency    │                                     │
-           in real      ├─────────────────────────────────────┤
-           BQ usage     │  SAFE.* prefix   TIMESTAMP timezone │
+         Frequency      │                                     │
+         in real        ├─────────────────────────────────────┤
+         BQ usage       │  SAFE.* prefix   TIMESTAMP timezone │
                         │  ARRAY_AGG       DDL OPTIONS        │
                         │  IGNORE NULLS                       │
                         ├─────────────────────────────────────┤

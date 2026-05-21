@@ -121,7 +121,7 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
     debounceTimer = setTimeout(async function() {
       var pf = await loadPagefind();
       if (!pf) {
-        results.innerHTML = '<div class="search-modal__empty"><p>Search index not available. Run <code>npm run build</code> first.</p></div>';
+        results.innerHTML = '<div class="search-modal__empty"><p>Search index not available. Run <code>pnpm build</code> first.</p></div>';
         return;
       }
 
